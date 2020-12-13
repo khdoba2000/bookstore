@@ -18,14 +18,14 @@
                          inc('{% url 'backend:book_inc' book.id %}', {{book.id}}); return false;
                     "
                  >
-                <i class="fas fa-plus" style="color: rgb(82, 197, 29)"></i>
+                <i class="fas fa-plus" id="plus_{{book.id}}" style="color: rgb(82, 197, 29)"></i>
                  </a>
                  <a href="#"  id="dec_{{book.id}}"
                  onclick="
                       dec('{% url 'backend:book_dec' book.id %}', {{book.id}}); return false;
                  "
                  >
-                 <i class="fas fa-minus" style="color: rgb(82, 197, 29)"></i>
+                 <i class="fas fa-minus" id="minus_{{book.id}}" style="color: rgb(82, 197, 29)"></i>
                  </a>
 
                  <a href="{% url 'backend:book_update' book.id %}">(Edit</a>
@@ -51,28 +51,26 @@
 
                 function inc(url, book_id){
                     console.log('Requesting JSON');
-                    $.post(url, {pk: book_id},  function(rowz){
+                    $("#plus_"+book_id).css('color', 'white');
+                    setTimeout(function(){$("#plus_"+book_id).css('color', 'rgb(82, 197, 29)');}, 50);
+                    
+                    $.post(url, {pk: book_id},  function(result){
                     console.log(url, 'finished');
-                    $("#inc"+book_id).toggle();
-                    setTimeout(function(){$("#inc"+book_id).toggle();}, 500);
-                    
-                })
-                    
-            
+                            
+                    })
+                           
                  }
             
             
                  function dec(url, book_id){
                     console.log('Requesting JSON');
-                    $.post(url, {pk: book_id},  function(rowz){
-                    console.log(url, 'finished');
-                    $("#dec_"+book_id).toggle();
-                    setTimeout(function(){$("#dec_"+book_id).toggle();}, 500);
+                    $("#minus_"+book_id).css('color', 'white');
+                    setTimeout(function(){$("#minus_"+book_id).css('color', 'rgb(82, 197, 29)');}, 50);
                     
-                })
-            
-            
-            
+                    $.post(url, {pk: book_id},  function(result){
+                    console.log(url, 'finished');
+                                   
+                    })            
                  }
              </script>
  {%endblock%}

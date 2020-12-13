@@ -45,7 +45,7 @@ from django.db.utils import IntegrityError
 class inc(View):
     def post(self, request, pk):
         print("Book PK", pk)
-        book = get_object_or_404(Book,pk)
+       # book = (Book, pk)
       #  print(book)
         #book.save()
         return HttpResponse()
@@ -54,7 +54,7 @@ class inc(View):
 @method_decorator(csrf_exempt, name='dispatch')
 class dec(View):
     def post(self, request, pk):
-        book = get_object_or_404(Book,pk)
+       # book = get_object_or_404(Book,pk)
 
         #book.quantity = book.quantity + 1
         #book.save()

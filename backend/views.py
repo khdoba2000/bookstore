@@ -40,25 +40,34 @@ class book_delete(LoginRequiredMixin, DeleteView):
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.db.utils import IntegrityError
+import json
 
 @method_decorator(csrf_exempt, name='dispatch')
 class inc(View):
     def post(self, request, pk):
         print("Book PK", pk)
-       # book = (Book, pk)
-      #  print(book)
-        #book.save()
+        book = get_object_or_404(Book, pk=pk)
+        print(book)
+        book.quantity = book.quantity+1
+        book.save()
         return HttpResponse()
         
 
 @method_decorator(csrf_exempt, name='dispatch')
 class dec(View):
     def post(self, request, pk):
-       # book = get_object_or_404(Book,pk)
-
-        #book.quantity = book.quantity + 1
-        #book.save()
+        book = get_object_or_404(Book, pk=pk)
+        if book.quantity > 0:
+            book.quantity = book.quantity - 1
+        else:
+            message="No any books left in the store"
+            resp = json.dumps({
+                'message': message,
+                'error': True
+            })
+            return HttpResponse(resp, content_type="application/json")
+        book.save()
         print("Book PK", pk)
-        #print(book)
+        print(book)
         return HttpResponse()
 

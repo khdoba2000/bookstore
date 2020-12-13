@@ -12,10 +12,11 @@
              {% for book in book_list %}
              <div class="row">
              <li><a href="{% url 'backend:book_detail' book.id %}">{{book}} </a> 
-                {{book.quantity}}pcs
+                <span id="book_qty_{{book.id}}">{{book.quantity}}</span>pcs
                  <a href="#"  id="inc_{{book.id}}"
                     onclick="
-                         inc('{% url 'backend:book_inc' book.id %}', {{book.id}}); return false;
+                         inc('{% url 'backend:book_inc' book.id %}', {{book.id}});
+                          return false;
                     "
                  >
                 <i class="fas fa-plus" id="plus_{{book.id}}" style="color: rgb(82, 197, 29)"></i>
@@ -51,11 +52,13 @@
 
                 function inc(url, book_id){
                     console.log('Requesting JSON');
-                    $("#plus_"+book_id).css('color', 'white');
-                    setTimeout(function(){$("#plus_"+book_id).css('color', 'rgb(82, 197, 29)');}, 50);
+                    $("#plus_"+book_id).css('color', 'white'); 
+                    setTimeout(function(){$("#plus_"+book_id).css('color', 'rgb(82, 197, 29)');}, 10);
                     
                     $.post(url, {pk: book_id},  function(result){
                     console.log(url, 'finished');
+                    console.log($("#book_qty_"+book_id).html()-(-1));
+                        $("#book_qty_"+book_id).html($("#book_qty_"+book_id).html()-(-1))
                             
                     })
                            
@@ -65,11 +68,23 @@
                  function dec(url, book_id){
                     console.log('Requesting JSON');
                     $("#minus_"+book_id).css('color', 'white');
-                    setTimeout(function(){$("#minus_"+book_id).css('color', 'rgb(82, 197, 29)');}, 50);
+                    setTimeout(function(){$("#minus_"+book_id).css('color', 'rgb(82, 197, 29)');}, 10);
                     
-                    $.post(url, {pk: book_id},  function(result){
-                    console.log(url, 'finished');
-                                   
+                    $.ajax({url: url, type: "POST", data:{pk: book_id}, 
+                        success: function(result){
+                        console.log(url, 'finished'); 
+                        if(result.error) {
+                            setTimeout(function(){}, 50);
+                            alert(result.message);  
+                            return;
+                        }
+                        console.log($("#book_qty_"+book_id).html()-1);
+                        $("#book_qty_"+book_id).html($("#book_qty_"+book_id).html()-1)
+                        
+                        }, 
+                        error: function(result){
+                        console.log(url, 'ERROR');                      
+                        }
                     })            
                  }
              </script>

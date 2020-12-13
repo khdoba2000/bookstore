@@ -10,7 +10,9 @@ genre_options=(
     ('biography', "biography")
 )
 class Book(models.Model):
-    title = models.CharField(max_length=64, unique=True, 
+    title = models.CharField(
+        max_length=64,
+        unique=True, 
         validators=[
             MinLengthValidator(3)
         ])
@@ -22,7 +24,8 @@ class Book(models.Model):
         validators=[
             RegexValidator(regex='^.{8}$', message='Length has to be 8')
         ],
-        max_length=8
+        max_length=8,
+        unique=True
     )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

@@ -34,6 +34,7 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 INSTALLED_APPS = [
     'django.contrib.humanize',
     'crispy_forms',
+    'home.apps.HomeConfig',
     'backend.apps.BackendConfig',
     'frontend.apps.FrontendConfig',
     'django.contrib.admin',

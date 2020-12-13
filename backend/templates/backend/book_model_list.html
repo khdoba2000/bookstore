@@ -9,39 +9,42 @@
      
         {% if book_model_list %}
         <ul>
-             {% for book in book_model_list %}
+             {% for book_model in book_model_list %}
              <div class="row">
-             <li><a href="{% url 'backend:book_detail' book.id %}">{{book}} </a> 
-                <span id="book_qty_{{book.id}}">{{book.quantity}}</span>pcs
-                 <a href="#"  id="inc_{{book.id}}"
+             <li><a href="{% url 'backend:book_model_detail' book_model.id %}">{{book_model}} </a> 
+                <span id="book_model_qty_{{book_model.id}}">{{book_model.quantity}}</span>pcs
+                 <a href="#"  id="inc_{{book_model.id}}"
                     onclick="
-                         inc('{% url 'backend:book_inc' book.id %}', {{book.id}});
+                         inc('{% url 'backend:book_model_inc' book_model.id %}', {{book_model.id}});
                           return false;
                     "
                  >
-                <i class="fas fa-plus" id="plus_{{book.id}}" style="color: rgb(82, 197, 29)"></i>
+                <i class="fas fa-plus" id="plus_{{book_model.id}}" style="color: rgb(82, 197, 29)"></i>
                  </a>
-                 <a href="#"  id="dec_{{book.id}}"
+                 <a href="#"  id="dec_{{book_model.id}}"
                  onclick="
-                      dec('{% url 'backend:book_dec' book.id %}', {{book.id}}); return false;
+                      dec('{% url 'backend:book_model_dec' book_model.id %}', {{book_model.id}}); return false;
                  "
                  >
-                 <i class="fas fa-minus" id="minus_{{book.id}}" style="color: rgb(82, 197, 29)"></i>
+                 <i class="fas fa-minus" id="minus_{{book_model.id}}" style="color: rgb(82, 197, 29)"></i>
                  </a>
 
-                 <a href="{% url 'backend:book_update' book.id %}">(Edit</a>
-                 <a href="{% url 'backend:book_delete' book.id %}">Delete</a>)
+                 <a href="{% url 'backend:book_model_update' book_model.id %}">(Edit</a>
+                 <a href="{% url 'backend:book_model_delete' book_model.id %}">Delete</a>)
              </li>
             </div>
              {%endfor%}
 
         </ul>
         {% else %}
-           <p class="row">There are no books in the library database.</p>
+           <p class="row">There are no book_models in the library database.</p>
         {% endif %}
        
             <p class="row">
-             <a href="{% url 'backend:book_create' %}">Add a new book model</a>
+             <a href="{% url 'backend:book_model_create' %}">Add a new book model</a>
+            </p>
+            <p class="row">
+                <a href="{% url 'home:home' %}">Back to Home</a>
             </p>
         </div>    
 
@@ -50,27 +53,27 @@
         <script>
 
 
-                function inc(url, book_id){
+                function inc(url, book_model_id){
                     console.log('Requesting JSON');
-                    $("#plus_"+book_id).css('color', 'white'); 
-                    setTimeout(function(){$("#plus_"+book_id).css('color', 'rgb(82, 197, 29)');}, 10);
+                    $("#plus_"+book_model_id).css('color', 'white'); 
+                    setTimeout(function(){$("#plus_"+book_model_id).css('color', 'rgb(82, 197, 29)');}, 10);
                     
-                    $.post(url, {pk: book_id},  function(result){
+                    $.post(url, {pk: book_model_id},  function(result){
                     console.log(url, 'finished');
-                    console.log($("#book_qty_"+book_id).html()-(-1));
-                        $("#book_qty_"+book_id).html($("#book_qty_"+book_id).html()-(-1))
+                    console.log($("#book_model_qty_"+book_model_id).html()-(-1));
+                        $("#book_model_qty_"+book_model_id).html($("#book_model_qty_"+book_model_id).html()-(-1))
                             
                     })
                            
                  }
             
             
-                 function dec(url, book_id){
+                 function dec(url, book_model_id){
                     console.log('Requesting JSON');
-                    $("#minus_"+book_id).css('color', 'white');
-                    setTimeout(function(){$("#minus_"+book_id).css('color', 'rgb(82, 197, 29)');}, 10);
+                    $("#minus_"+book_model_id).css('color', 'white');
+                    setTimeout(function(){$("#minus_"+book_model_id).css('color', 'rgb(82, 197, 29)');}, 10);
                     
-                    $.ajax({url: url, type: "POST", data:{pk: book_id}, 
+                    $.ajax({url: url, type: "POST", data:{pk: book_model_id}, 
                         success: function(result){
                         console.log(url, 'finished'); 
                         if(result.error) {
@@ -78,8 +81,8 @@
                             alert(result.message);  
                             return;
                         }
-                        console.log($("#book_qty_"+book_id).html()-1);
-                        $("#book_qty_"+book_id).html($("#book_qty_"+book_id).html()-1)
+                        console.log($("#book_model_qty_"+book_model_id).html()-1);
+                        $("#book_model_qty_"+book_model_id).html($("#book_model_qty_"+book_model_id).html()-1)
                         
                         }, 
                         error: function(result){

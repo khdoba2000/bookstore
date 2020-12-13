@@ -21,5 +21,8 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url("backend", include('backend.urls')),
     url("frontend/", include('frontend.urls')),
+    url("", include('home.urls')),
+
+
 
 ]

@@ -3,20 +3,20 @@
 {% block content%}
        <div class="container">
                 <div class="row">
-                <p>Book: {{book}}
-                <br>Price: {{book.price}} sums
-                <br>Quantity: {{book.quantity}}pcs
-                <br>Genre: {{book.genre}}
-                <br>Created at: {{book.created_at|naturaltime}}
-                <br>Updated at: {{book.updated_at|naturaltime}}
+                <p>book_model: {{book_model}}
+                <br>Price: {{book_model.price}} sums
+                <br>Quantity: {{book_model.quantity}}pcs
+                <br>Genre: {{book_model.genre}}
+                <br>Created at: {{book_model.created_at|naturaltime}}
+                <br>Updated at: {{book_model.updated_at|naturaltime}}
                 <p class="row">
-                <a href="{% url 'backend:book_update' book.id %}">(Edit</a>
-                <a href="{% url 'backend:book_delete' book.id %}">Delete</a>)
+                <a href="{% url 'backend:book_model_update' book_model.id %}">(Edit</a>
+                <a href="{% url 'backend:book_model_delete' book_model.id %}">Delete</a>)
                 </p>
                </p>
                 </div>
        </div>
        <p class="row">
-            <a href="{% url 'backend:book_list' %}">Back to Main</a>
+            <a href="{% url 'backend:book_model_list' %}">Back to Main</a>
            </p>
 {% endblock %}

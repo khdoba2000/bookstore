@@ -1,5 +1,6 @@
 from django.db import models
 
+from django.core.validators import MinLengthValidator, RegexValidator
 # Create your models here.
 
 genre_options=(
@@ -9,11 +10,20 @@ genre_options=(
     ('biography', "biography")
 )
 class Book(models.Model):
-    title = models.CharField(max_length=64, unique=True)
+    title = models.CharField(max_length=64, unique=True, 
+        validators=[
+            MinLengthValidator(3)
+        ])
     author = models.CharField(max_length=64)
     price = models.PositiveIntegerField()
     genre = models.CharField(max_length=64, choices=genre_options)
     quantity = models.IntegerField(default=1)
+    code = models.CharField(
+        validators=[
+            RegexValidator(regex='^.{8}$', message='Length has to be 8')
+        ],
+        max_length=8
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     

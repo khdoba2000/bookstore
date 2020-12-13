@@ -1,7 +1,7 @@
 from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponse
 from django.views.generic import ListView, CreateView, DetailView, UpdateView, DeleteView
-from .models import Book
+from .models import Book_model
 from django.views import View
 from django.urls import reverse_lazy
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -10,29 +10,29 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 class book_list(LoginRequiredMixin, ListView):
-    model = Book
+    model = Book_model
     fields="__all__"
     success_url =  reverse_lazy('backend:book_list')
 
 class book_create(LoginRequiredMixin, CreateView):
-    model = Book
+    model = Book_model
     fields="__all__"
     success_url =  reverse_lazy('backend:book_list')
     
 
 class book_detail(LoginRequiredMixin,DetailView):
-    model = Book
+    model = Book_model
     fields="__all__"
     success_url =  reverse_lazy('backend:book_list')
 
 class book_update(LoginRequiredMixin, UpdateView):
-    model = Book
+    model = Book_model
     fields="__all__"
     success_url =  reverse_lazy('backend:book_list')
 
 
 class book_delete(LoginRequiredMixin, DeleteView):
-    model = Book
+    model = Book_model
     fields="__all__"
     success_url =  reverse_lazy('backend:book_list')
 
@@ -45,8 +45,8 @@ import json
 @method_decorator(csrf_exempt, name='dispatch')
 class inc(View):
     def post(self, request, pk):
-        print("Book PK", pk)
-        book = get_object_or_404(Book, pk=pk)
+        print("Book model PK", pk)
+        book = get_object_or_404(Book_model, pk=pk)
         print(book)
         book.quantity = book.quantity+1
         book.save()
@@ -56,7 +56,7 @@ class inc(View):
 @method_decorator(csrf_exempt, name='dispatch')
 class dec(View):
     def post(self, request, pk):
-        book = get_object_or_404(Book, pk=pk)
+        book = get_object_or_404(Book_model, pk=pk)
         if book.quantity > 0:
             book.quantity = book.quantity - 1
         else:
@@ -67,7 +67,7 @@ class dec(View):
             })
             return HttpResponse(resp, content_type="application/json")
         book.save()
-        print("Book PK", pk)
+        print("Book model PK", pk)
         print(book)
         return HttpResponse()
 

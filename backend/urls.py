@@ -3,7 +3,6 @@ from django.conf.urls import url
 from . import views
 from django.shortcuts import get_object_or_404
 from django.urls import include, path
-from .models import Book
 from .views import inc, dec, book_list, book_create, book_detail, book_update, book_delete
 app_name = 'backend'
 

@@ -7,9 +7,9 @@
 <div class="container">
 
      
-        {% if book_list %}
+        {% if book_model_list %}
         <ul>
-             {% for book in book_list %}
+             {% for book in book_model_list %}
              <div class="row">
              <li><a href="{% url 'backend:book_detail' book.id %}">{{book}} </a> 
                 <span id="book_qty_{{book.id}}">{{book.quantity}}</span>pcs
@@ -41,7 +41,7 @@
         {% endif %}
        
             <p class="row">
-             <a href="{% url 'backend:book_create' %}">Add a new book</a>
+             <a href="{% url 'backend:book_create' %}">Add a new book model</a>
             </p>
         </div>    
 

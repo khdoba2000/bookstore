@@ -1,0 +1,19 @@
+<html>
+    <head>
+        <title>Bookstrore Backend</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    </head>
+    <body>
+        <div class="container">
+        <div class="row" style="color: brown;">
+                {% load crispy_forms_tag %}
+                <form action="{% url 'backend:book_create' %}" method ="post">
+                {%csrf_token%}
+                {{form|crispy}}
+                <input type="submit" value="Save">
+            </form>
+        </div>
+        </div>
+      
+    </body>
+</html>

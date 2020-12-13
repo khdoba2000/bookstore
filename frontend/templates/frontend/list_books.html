@@ -1,0 +1,15 @@
+<html>
+    <head>
+        <title>FrontEnd</title>
+    
+    </head>
+    <body>
+        <ul>
+             {% for book in book_list%}
+             <li>{{book}} <a href="{%url 'frontend: book_order' book.id%}">Order</a> </li>
+             {%endfor%}
+
+        </ul>
+      
+    </body>
+</html>

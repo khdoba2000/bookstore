@@ -1,0 +1,37 @@
+<html>
+    <head>
+        <title>Backend
+        {% block title %}{{ settings.APP_NAME }}{% endblock %}
+        </title>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css">
+
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/v4-shims.css">
+    
+        {% block head %} {% endblock %}
+
+    </head>
+ 
+    <body>
+            <div class="container">
+                    {% block navbar %} {% endblock %}
+                    {% block welcome %} {% endblock %}
+                    {% block messages %}
+                        {% if messages %}
+                        {% for msg in messages %}
+                            <div class="alert alert-{{msg.level_tag}}" role="alert">
+                            {{msg.message}}
+                            </div>
+                        {% endfor %}
+                        {% endif %}
+                    {% endblock %}
+
+                    {% block content %}
+                    {% endblock %}
+
+            </div>
+            {% block footer %} {% endblock %}
+    </body>
+</html>
+

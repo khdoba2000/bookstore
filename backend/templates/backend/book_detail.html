@@ -1,0 +1,22 @@
+{%extends "base_bootsrap.html" %}
+{% load humanize %}
+{% block content%}
+       <div class="container">
+                <div class="row">
+                <p>Book: {{book}}
+                <br>Price: {{book.price}} sums
+                <br>Quantity: {{book.quantity}}pcs
+                <br>Genre: {{book.genre}}
+                <br>Created at: {{book.created_at|naturaltime}}
+                <br>Updated at: {{book.updated_at|naturaltime}}
+                <p class="row">
+                <a href="{% url 'backend:book_update' book.id %}">(Edit</a>
+                <a href="{% url 'backend:book_delete' book.id %}">Delete</a>)
+                </p>
+               </p>
+                </div>
+       </div>
+       <p class="row">
+            <a href="{% url 'backend:book_list' %}">Back to Main</a>
+           </p>
+{% endblock %}

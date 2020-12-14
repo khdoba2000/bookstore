@@ -82,13 +82,21 @@ class inc(View):
         print("book_model PK", pk)
         book_model = get_object_or_404(Book_model, pk=pk)
         print(book_model)
-        last_book_in_model=Book.objects.filter(model=book_model)[len(Book.objects.all())-1]
-        if last_book_in_model:
+        num_of_existing_books=len(Book.objects.filter(model=book_model))
+        if num_of_existing_books:
+            last_book_in_model=Book.objects.filter(model=book_model)[num_of_existing_books-1]
             code_of_last=int(last_book_in_model.code)
-            new_code=code_of_last+1
+            new_code=f"{code_of_last+1}"
         else:
-            new_code=book_model.id*100
-        new_book=Book(code="{{new_code}}", model=book_model)
+            if(book_model.id<10):
+                first_2digit=f"0{book_model.id}"
+            elif book_model.id<100:
+                first_2digit=f"{book_model.id}"
+            else:
+                return AssertionError
+            new_code=f"{first_2digit}00"
+
+        new_book=Book(code=new_code, model=book_model)
         new_book.save()
         book_model.quantity = book_model.quantity+1
         book_model.save()
@@ -101,6 +109,12 @@ class dec(View):
         book_model = get_object_or_404(Book_model, pk=pk)
         if book_model.quantity > 0:
             book_model.quantity = book_model.quantity - 1
+            num_of_existing_books=len(Book.objects.filter(model=book_model))
+            if num_of_existing_books:
+                last_book_in_model=Book.objects.filter(model=book_model)[num_of_existing_books-1]
+                code_of_last=int(last_book_in_model.code)
+                last_book_in_model.delete()
+                
         else:
             message="No any book_models left in the store"
             resp = json.dumps({

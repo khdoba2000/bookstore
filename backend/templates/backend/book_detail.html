@@ -4,12 +4,11 @@
        <div class="container">
                 <div class="row">
                 <p>book: {{book}}
-                <!-- <br>Price: {{book_model.price}} sums
-                <br>Quantity: {{book_model.quantity}}pcs
-                <br>Genre: {{book_model.genre}}
-                <br>Created at: {{book_model.created_at|naturaltime}}
-                <br>Updated at: {{book_model.updated_at|naturaltime}}
-                <br>Books: {{book_model.books}} -->
+                <br>Price: {{book.model.price}} sums
+                <br>Quantity: {{book.model.quantity}}pcs
+                <br>Genre: {{book.model.genre}}
+                <br>Created at: {{book.created_at|naturaltime}}
+                <br>Updated at: {{book.updated_at|naturaltime}}
                 <p class="row">
                 <a href="{% url 'backend:book_update' book.id %}">(Edit</a>
                 <a href="{% url 'backend:book_delete' book.id %}">Delete</a>)

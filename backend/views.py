@@ -24,6 +24,7 @@ class book_model_detail(LoginRequiredMixin,DetailView):
     model = Book_model
     fields="__all__"
     success_url =  reverse_lazy('backend:book_model_list')
+  
 
 class book_model_update(LoginRequiredMixin, UpdateView):
     model = Book_model

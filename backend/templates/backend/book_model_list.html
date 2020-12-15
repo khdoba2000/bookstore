@@ -12,7 +12,7 @@
              {% for book_model in book_model_list %}
              <div class="row">
              <li><a href="{% url 'backend:book_model_detail' book_model.id %}">{{book_model}} </a> 
-                <span id="book_model_qty_{{book_model.id}}">{{book_model.quantity}}</span>pcs
+                <span id="book_model_qty_{{book_model.id}}">{{book_model.get_quantity}}</span>pcs
                  <a href="#"  id="inc_{{book_model.id}}"
                     onclick="
                          inc('{% url 'backend:book_model_inc' book_model.id %}', {{book_model.id}});

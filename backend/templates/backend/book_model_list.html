@@ -35,7 +35,7 @@
                     book_model_id='{{book_model.id}}'*1;
                     console.log(num_of_books_to_add);
                     add_set_of_books(book_model_id, num_of_books_to_add);
- 
+                    $('#num_of_books_{{book_model.id}}').val($('#num_of_books_{{book_model.id}}').placeholder);
                     return false;
                  "></input>
                  <a href="{% url 'backend:book_model_update' book_model.id %}">(Edit</a>

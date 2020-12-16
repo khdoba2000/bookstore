@@ -8,10 +8,19 @@
 
      
         {% if book_model_list %}
-        <ul>
+        <ul> <th>Book model</th>
              {% for book_model in book_model_list %}
              <div class="row">
+            <tr>
+             <td>
              <li><a href="{% url 'backend:book_model_detail' book_model.id %}">{{book_model}} </a> 
+             </td>
+
+             <td> <a href="{% url 'backend:book_model_update' book_model.id %}">(Edit</a>
+                <a href="{% url 'backend:book_model_delete' book_model.id %}">Delete</a>)
+            </td>
+             
+             <td>
                 <span id="book_model_qty_{{book_model.id}}">{{book_model.get_quantity}}</span>pcs
                  <a href="#"  id="inc_{{book_model.id}}"
                     onclick="
@@ -28,20 +37,34 @@
                  >
                  <i class="fas fa-minus" id="minus_{{book_model.id}}" style="color: rgb(82, 197, 29)"></i>
                  </a>
-                 
-                 <input id="num_of_books_{{book_model.id}}" name="num_of_books_to_add" type="number" placeholder="num_of_books_to_add"></input>
-                 <input type="submit" onclick=" 
-                    num_of_books_to_add=$('#num_of_books_{{book_model.id}}').val()*1;
+                </td>
+                 <td>
+                 <input id="num_of_books_to_add{{book_model.id}}" name="num_of_books_to_add" type="number" placeholder="num_of_books_to_add"></input>
+                 <button name="Add" onclick=" 
+                    num_of_books_to_add=$('#num_of_books_to_add{{book_model.id}}').val()*1;
                     book_model_id='{{book_model.id}}'*1;
                     console.log(num_of_books_to_add);
                     add_set_of_books(book_model_id, num_of_books_to_add);
                     $('#num_of_books_{{book_model.id}}').val($('#num_of_books_{{book_model.id}}').placeholder);
                     return false;
-                 "></input>
-                 <a href="{% url 'backend:book_model_update' book_model.id %}">(Edit</a>
-                 <a href="{% url 'backend:book_model_delete' book_model.id %}">Delete</a>)
+                 ">Add</button>
+            </td>
+            <td>
+                    <input id="num_of_books_to_rem{{book_model.id}}" name="num_of_books_to_rem" type="number" placeholder="num_of_books_to_remove"></input>
+                    <button name="Remove" onclick=" 
+                       num_of_books_to_remove=$('#num_of_books_to_rem{{book_model.id}}').val();
+                       book_model_id='{{book_model.id}}';
+                       console.log(num_of_books_to_remove);
+                       remove_set_of_books(book_model_id, num_of_books_to_remove);
+                       $('#num_of_books_to_rem{{book_model.id}}').val($('#num_of_books_to_rem{{book_model.id}}').placeholder);
+                       return false;
+                    ">Remove</button>
+               </td>
+                
              </li>
+            </tr>
             </div>
+             
              {%endfor%}
 
         </ul>
@@ -64,17 +87,15 @@
                     console.log('Requesting JSON ');
                     url='{% url "backend:book_model_add_set"%}';
                     console.log(url);
-                    //clear value field of input
-                    $('#num_of_books_{{book_model_id}}').html(0);
-
-                    var dic ={
+                    
+                    var dic = {
                     "pk": book_model_id,
                     "num": num_of_books_to_add};
 
                     console.log("num of BOOK to ADD ",dic['num']);
                     console.log("Pk ", dic['pk']);
                     
-                    $.ajax({type:"GET",
+                    $.ajax({type:"POST",
                     url: url,
                     data: {
                         "pk": book_model_id,
@@ -82,6 +103,10 @@
                     },                     
                     success: function(result){
                         console.log(url, 'finished');
+                        if(result.error){
+                            alert(result.message);  
+                            return;
+                        }
                         new_quantity = result.quantity
                         console.log(new_quantity);
                         $("#book_model_qty_"+book_model_id).html(new_quantity)
@@ -96,6 +121,40 @@
                 }  
                            
                  
+
+                function remove_set_of_books(book_model_id, num_of_books_to_remove){
+                    console.log('Requesting JSON ');
+                    url='{% url "backend:book_model_remove_set"%}';
+                    console.log(url);
+                    
+                    console.log("num of BOOK to Remove ", num_of_books_to_remove);
+                    console.log("Pk ", book_model_id);
+                    
+                    $.ajax({type:"POST",
+                    url: url,
+                    data: {
+                        "pk": book_model_id,
+                        "num": num_of_books_to_remove
+                    },                     
+                    success: function(result){
+                        console.log(url, 'finished');
+                        if(result.error){
+                            alert(result.message);  
+                            return;
+                        }
+                        new_quantity = result.quantity
+                        console.log(new_quantity);
+                        $("#book_model_qty_"+book_model_id).html(new_quantity)
+                                
+                    },
+                    error: 
+                    function(result){
+                        console.log('ERROR');                      
+                    }
+
+                    })
+                }  
+                           
 
                 function inc(url, book_model_id){
                     console.log('Requesting JSON');
@@ -130,9 +189,7 @@
                             alert(result.message);  
                             return;
                         }
-                       /*  console.log($("#book_model_qty_"+book_model_id).html()-1);
-                        $("#book_model_qty_"+book_model_id).html($("#book_model_qty_"+book_model_id).html()-1)
-                         */
+                
                         //get model_quantity
                         new_quantity = result.quantity;
                         console.log(new_quantity);

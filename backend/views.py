@@ -79,10 +79,47 @@ from backend.models import Book
 
 @method_decorator(csrf_exempt, name='dispatch')
 
+class remove_book_set(View):
+    def post(self, request):
+        num_of_books_to_remove=request.POST.get('num', None)
+        pk=request.POST.get('pk', None)
+        print("NUM= ",num_of_books_to_remove)
+        print("book_model PK=", pk)
+        book_model = get_object_or_404(Book_model, pk=pk)
+        print(book_model)
+        
+        if int(num_of_books_to_remove)>book_model.get_quantity():
+            resp = json.dumps({
+                    'message': f"No such number of books available in {book_model}",
+                    'error': True
+                })
+            return HttpResponse(resp, content_type="application/json")
+
+        for i in range(int(num_of_books_to_remove)):
+            last_book_in_model=Book.objects.filter(model=book_model).last()
+            if last_book_in_model:
+                last_book_in_model.delete()
+
+            else: #if no book in database
+                resp = json.dumps({
+                    'message': "No any book_models left in the store",
+                    'error': True
+                })
+                return HttpResponse(resp, content_type="application/json")
+           
+            
+        book_model.save()
+        resp = json.dumps({
+            'quantity': book_model.get_quantity()
+        })
+        return HttpResponse(resp, content_type="application/json")        
+
+@method_decorator(csrf_exempt, name='dispatch')
+
 class add_book_set(View):
-    def get(self, request):
-        num_of_books_to_add=request.GET.get('num', None)
-        pk=request.GET.get('pk', None)
+    def post(self, request):
+        num_of_books_to_add=request.POST.get('num', None)
+        pk=request.POST.get('pk', None)
         print("NUM= ",num_of_books_to_add)
         print("book_model PK=", pk)
         book_model = get_object_or_404(Book_model, pk=pk)
@@ -90,11 +127,26 @@ class add_book_set(View):
         last_book_in_model=Book.objects.filter(model=book_model).last()
         if last_book_in_model:
             code_of_last=int(last_book_in_model.code)
+            used_codes=code_of_last%100+1
+            if used_codes+int(num_of_books_to_add)>100:
+                resp = json.dumps({
+                    'message': f"No such amount of code available for the model {book_model}\nOnly 100 code available for each model\n Only {100-used_codes} empty codes left",
+                    'error': True
+                })
+                return HttpResponse(resp, content_type="application/json")    
+
             if code_of_last+1 <= 999:
                new_code=f"0{code_of_last+1}"
             else:
                new_code=f"{code_of_last+1}"
         else: #if no book is available for the model
+            if int(num_of_books_to_add)>100:
+                resp = json.dumps({
+                    'message': f"No such amount of code available for the model {book_model}\nOnly 100 code available for each model\n Only {100-book_model.get_quantity()} empty codes left",
+                    'error': True
+                })
+                return HttpResponse(resp, content_type="application/json")    
+
             if(book_model.id<10):
                 first_2digit=f"0{book_model.id}"
             elif book_model.id<100:
@@ -102,7 +154,7 @@ class add_book_set(View):
             else:
                 return AssertionError
             new_code=f"{first_2digit}00"
-
+            
         for i in range(int(num_of_books_to_add)):
             new_book=Book(code=new_code, model=book_model)
             new_book.save()
@@ -159,12 +211,10 @@ class inc(View):
 class dec(View):
     def post(self, request, pk):
         book_model = get_object_or_404(Book_model, pk=pk)
-        num_of_existing_books=len(Book.objects.filter(model=book_model))
-       
-        if num_of_existing_books>0:
-                last_book_in_model=Book.objects.filter(model=book_model)[num_of_existing_books-1]
-                code_of_last=int(last_book_in_model.code)
-                last_book_in_model.delete()
+        last_book_in_model=Book.objects.filter(model=book_model).last()
+
+        if last_book_in_model:
+            last_book_in_model.delete()
         
         else: #if no book in database
             message="No any book_models left in the store"

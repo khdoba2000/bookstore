@@ -30,7 +30,7 @@ class book_model_detail(LoginRequiredMixin,DetailView):
 
 class book_model_update(LoginRequiredMixin, UpdateView):
     model = Book_model
-    fields=["title", "author", "genre", "price"]
+    fields="__all__"
     success_url =  reverse_lazy('backend:book_model_list')
 
 
@@ -71,7 +71,6 @@ class book_delete(LoginRequiredMixin, DeleteView):
     fields="__all__"
     success_url =  reverse_lazy('backend:book_list')
 
-
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from django.db.utils import IntegrityError
@@ -79,17 +78,23 @@ import json
 from backend.models import Book
 
 @method_decorator(csrf_exempt, name='dispatch')
-class inc(View):
-    def post(self, request, pk):
-        print("book_model PK", pk)
+
+class add_book_set(View):
+    def get(self, request):
+        num_of_books_to_add=request.GET.get('num', None)
+        pk=request.GET.get('pk', None)
+        print("NUM= ",num_of_books_to_add)
+        print("book_model PK=", pk)
         book_model = get_object_or_404(Book_model, pk=pk)
         print(book_model)
-        num_of_existing_books=len(Book.objects.filter(model=book_model))
-        if num_of_existing_books:
-            last_book_in_model=Book.objects.filter(model=book_model)[num_of_existing_books-1]
+        last_book_in_model=Book.objects.filter(model=book_model).last()
+        if last_book_in_model:
             code_of_last=int(last_book_in_model.code)
-            new_code=f"{code_of_last+1}"
-        else:
+            if code_of_last+1 <= 999:
+               new_code=f"0{code_of_last+1}"
+            else:
+               new_code=f"{code_of_last+1}"
+        else: #if no book is available for the model
             if(book_model.id<10):
                 first_2digit=f"0{book_model.id}"
             elif book_model.id<100:
@@ -98,34 +103,82 @@ class inc(View):
                 return AssertionError
             new_code=f"{first_2digit}00"
 
-        new_book=Book(code=new_code, model=book_model)
-        new_book.save()
-        book_model.quantity = book_model.quantity+1
+        for i in range(int(num_of_books_to_add)):
+            new_book=Book(code=new_code, model=book_model)
+            new_book.save()
+            code_of_last = int(new_book.code)
+            if code_of_last+1 <= 999:
+               new_code=f"0{code_of_last+1}"
+            else:
+               new_code=f"{code_of_last+1}"
+            
         book_model.save()
-        return HttpResponse()
-        
+        resp = json.dumps({
+            'quantity': book_model.get_quantity()
+        })
+        return HttpResponse(resp, content_type="application/json")        
+
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class inc(View):
+    def post(self, request, pk):
+        print(f"book_model PK {pk}")
+        book_model = get_object_or_404(Book_model, pk=pk)
+        print(book_model)
+        last_book_in_model=Book.objects.filter(model=book_model).last()
+        if last_book_in_model:
+            print(f"LAst book {last_book_in_model}")
+            code_of_last=int(last_book_in_model.code)
+            if code_of_last+1 <= 999:
+               new_code=f"0{code_of_last+1}"
+            else:
+               new_code=f"{code_of_last+1}"
+               print(new_code)
+        else: #if no book is available for the model
+            if(book_model.id<10):
+                first_2digit=f"0{book_model.id}"
+            elif book_model.id<100:
+                first_2digit=f"{book_model.id}"
+            else:
+                return AssertionError
+            new_code=f"{first_2digit}00"
+            print(new_code)
+
+        book=Book(code=new_code, model=book_model)
+        book.save()
+        print(f"New book {Book.objects.filter(model=book_model).last()}")
+        book_model.save()
+
+        resp = json.dumps({
+            'quantity': book_model.get_quantity()
+        })
+        return HttpResponse(resp, content_type="application/json")        
 
 @method_decorator(csrf_exempt, name='dispatch')
 class dec(View):
     def post(self, request, pk):
         book_model = get_object_or_404(Book_model, pk=pk)
-        if book_model.quantity > 0:
-            book_model.quantity = book_model.quantity - 1
-            num_of_existing_books=len(Book.objects.filter(model=book_model))
-            if num_of_existing_books:
+        num_of_existing_books=len(Book.objects.filter(model=book_model))
+       
+        if num_of_existing_books>0:
                 last_book_in_model=Book.objects.filter(model=book_model)[num_of_existing_books-1]
                 code_of_last=int(last_book_in_model.code)
                 last_book_in_model.delete()
-                
-        else:
+        
+        else: #if no book in database
             message="No any book_models left in the store"
             resp = json.dumps({
                 'message': message,
                 'error': True
             })
             return HttpResponse(resp, content_type="application/json")
-        book_model.save()
         print("book_model PK", pk)
         print(book_model)
-        return HttpResponse()
+        resp = json.dumps({
+            'quantity': book_model.get_quantity()
+        })
+        book_model.save()
+
+        return HttpResponse(resp, content_type="application/json")
 

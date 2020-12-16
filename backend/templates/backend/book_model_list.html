@@ -16,7 +16,7 @@
                  <a href="#"  id="inc_{{book_model.id}}"
                     onclick="
                          inc('{% url 'backend:book_model_inc' book_model.id %}', {{book_model.id}});
-                          return false;
+                         return false;
                     "
                  >
                 <i class="fas fa-plus" id="plus_{{book_model.id}}" style="color: rgb(82, 197, 29)"></i>
@@ -28,7 +28,16 @@
                  >
                  <i class="fas fa-minus" id="minus_{{book_model.id}}" style="color: rgb(82, 197, 29)"></i>
                  </a>
-
+                 
+                 <input id="num_of_books_{{book_model.id}}" name="num_of_books_to_add" type="number" placeholder="num_of_books_to_add"></input>
+                 <input type="submit" onclick=" 
+                    num_of_books_to_add=$('#num_of_books_{{book_model.id}}').val()*1;
+                    book_model_id='{{book_model.id}}'*1;
+                    console.log(num_of_books_to_add);
+                    add_set_of_books(book_model_id, num_of_books_to_add);
+ 
+                    return false;
+                 "></input>
                  <a href="{% url 'backend:book_model_update' book_model.id %}">(Edit</a>
                  <a href="{% url 'backend:book_model_delete' book_model.id %}">Delete</a>)
              </li>
@@ -51,38 +60,83 @@
 
 
         <script>
+                function add_set_of_books(book_model_id, num_of_books_to_add){
+                    console.log('Requesting JSON ');
+                    url='{% url "backend:book_model_add_set"%}';
+                    console.log(url);
+                    //clear value field of input
+                    $('#num_of_books_{{book_model_id}}').html(0);
 
+                    var dic ={
+                    "pk": book_model_id,
+                    "num": num_of_books_to_add};
+
+                    console.log("num of BOOK to ADD ",dic['num']);
+                    console.log("Pk ", dic['pk']);
+                    
+                    $.ajax({type:"GET",
+                    url: url,
+                    data: {
+                        "pk": book_model_id,
+                        "num": num_of_books_to_add
+                    },                     
+                    success: function(result){
+                        console.log(url, 'finished');
+                        new_quantity = result.quantity
+                        console.log(new_quantity);
+                        $("#book_model_qty_"+book_model_id).html(new_quantity)
+                                
+                    },
+                    error: 
+                    function(result){
+                        console.log(url, 'ERROR');                      
+                    }
+
+                    })
+                }  
+                           
+                 
 
                 function inc(url, book_model_id){
                     console.log('Requesting JSON');
                     $("#plus_"+book_model_id).css('color', 'white'); 
                     setTimeout(function(){$("#plus_"+book_model_id).css('color', 'rgb(82, 197, 29)');}, 10);
                     
-                    $.post(url, {pk: book_model_id},  function(result){
+                    $.post(url, 
+                    function(result){
                     console.log(url, 'finished');
-                    console.log($("#book_model_qty_"+book_model_id).html()-(-1));
-                        $("#book_model_qty_"+book_model_id).html($("#book_model_qty_"+book_model_id).html()-(-1))
+                    new_quantity = result.quantity;
+                    console.log(new_quantity);
+                    $("#book_model_qty_"+book_model_id).html(new_quantity)
                             
                     })
+
+        
                            
                  }
             
             
                  function dec(url, book_model_id){
+                    
                     console.log('Requesting JSON');
                     $("#minus_"+book_model_id).css('color', 'white');
                     setTimeout(function(){$("#minus_"+book_model_id).css('color', 'rgb(82, 197, 29)');}, 10);
                     
-                    $.ajax({url: url, type: "POST", data:{pk: book_model_id}, 
+                    $.ajax({url: url, 
+                        type: "POST", 
                         success: function(result){
                         console.log(url, 'finished'); 
                         if(result.error) {
-                            setTimeout(function(){}, 50);
                             alert(result.message);  
                             return;
                         }
-                        console.log($("#book_model_qty_"+book_model_id).html()-1);
+                       /*  console.log($("#book_model_qty_"+book_model_id).html()-1);
                         $("#book_model_qty_"+book_model_id).html($("#book_model_qty_"+book_model_id).html()-1)
+                         */
+                        //get model_quantity
+                        new_quantity = result.quantity;
+                        console.log(new_quantity);
+                        $("#book_model_qty_"+book_model_id).html(new_quantity)
                         
                         }, 
                         error: function(result){

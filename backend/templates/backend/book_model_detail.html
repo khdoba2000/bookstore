@@ -5,7 +5,7 @@
                 <div class="row">
                 <p>book_model: {{book_model}}
                 <br>Price: {{book_model.price}} sums
-                <br>Quantity: {{book_model.quantity}}pcs
+                <br>Quantity: {{book_model.get_quantity}}pcs
                 <br>Genre: {{book_model.genre}}
                 <br>Created at: {{book_model.created_at|naturaltime}}
                 <br>Updated at: {{book_model.updated_at|naturaltime}}
@@ -18,6 +18,7 @@
                 <a href="{% url 'backend:book_model_update' book_model.id %}">(Edit</a>
                 <a href="{% url 'backend:book_model_delete' book_model.id %}">Delete</a>)
                 </p>
+
                </p>
                 </div>
        </div>

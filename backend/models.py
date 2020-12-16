@@ -20,13 +20,12 @@ class Book_model(models.Model):
     author = models.CharField(max_length=64)
     price = models.PositiveIntegerField()
     genre = models.CharField(max_length=64, choices=genre_options)
-    quantity = models.PositiveIntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
     def get_quantity(self):
-        self.quantity = len(Book.objects.filter(model=self))
-        return self.quantity
+        quantity = len(Book.objects.filter(model=self))
+        return quantity
 
     def get_books(self):
         return Book.objects.filter(model=self)

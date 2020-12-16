@@ -5,7 +5,7 @@
                 <div class="row">
                 <p>book: {{book}}
                 <br>Price: {{book.model.price}} sums
-                <br>Quantity: {{book.model.quantity}}pcs
+                <br>Quantity of the same type: {{book.model.get_quantity}}pcs
                 <br>Genre: {{book.model.genre}}
                 <br>Created at: {{book.created_at|naturaltime}}
                 <br>Updated at: {{book.updated_at|naturaltime}}

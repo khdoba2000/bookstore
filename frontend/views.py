@@ -5,7 +5,7 @@ from django.views.generic import ListView
 from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 # Create your views here.
-
+app_name="frontend"
 def book_list(request):
     model = Book
     ctx={
@@ -15,13 +15,11 @@ def book_list(request):
     return render(request, template_name, ctx)
  
 def book_order(request, pk):
-        print("hello GUY ")
-        #pk=request.GET['pk']
         print(f"Book{pk} ordered")
         book_model=Book.objects.get(pk=pk)
         if book_model.get_quantity():
             code=book_model.books.last().code
-            #book_model.books.last().taken=True
+            book_model.delete()
             
         ctx={
             'pk': pk,

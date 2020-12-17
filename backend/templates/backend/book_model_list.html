@@ -8,7 +8,7 @@
 
      
         {% if book_model_list %}
-        <ul> <th>Book model</th>
+        <ul> <th><h1 style="color: darkblue; text-align: left;">Book models</h1></th>
              {% for book_model in book_model_list %}
              <div class="row">
             <tr>
@@ -79,6 +79,9 @@
                 <a href="{% url 'home:home' %}">Back to Home</a>
             </p>
         </div>    
+
+
+
 
 
 
@@ -168,9 +171,7 @@
                     console.log(new_quantity);
                     $("#book_model_qty_"+book_model_id).html(new_quantity)
                             
-                    })
-
-        
+                    })        
                            
                  }
             

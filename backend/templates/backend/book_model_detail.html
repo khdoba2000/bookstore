@@ -9,11 +9,15 @@
                 <br>Genre: {{book_model.genre}}
                 <br>Created at: {{book_model.created_at|naturaltime}}
                 <br>Updated at: {{book_model.updated_at|naturaltime}}
-                <br>Books: {% for book in book_model.get_books %}
-                           <ul>
-                              <li>{{book}}</li>
-                           </ul>
-                           {%endfor%}
+                <br>Books: {%if  book_model.get_books%}<!-- If book exists -->
+                              {% for book in book_model.get_books %}
+                              <ul>
+                                 <li>{{book}}</li>
+                              </ul>
+                              {%endfor%}
+                           {%else%}<!-- If no book exist in this model -->
+                              No books available in this model
+                           {%endif%}
                 <p class="row">
                 <a href="{% url 'backend:book_model_update' book_model.id %}">(Edit</a>
                 <a href="{% url 'backend:book_model_delete' book_model.id %}">Delete</a>)

@@ -5,23 +5,27 @@
 {% block content%}
 
 <div class="container">
+      <table class="table">
 
      
         {% if book_model_list %}
-        <ul> <th><h1 style="color: darkblue; text-align: left;">Book models</h1></th>
+        <th><h1 style="color: darkblue; text-align: left;">Book models</h1></th>
+        <ul> 
              {% for book_model in book_model_list %}
-             <div class="row">
-            <tr>
+             <tr>
+             <p class="row">
              <td>
              <li><a href="{% url 'backend:book_model_detail' book_model.id %}">{{book_model}} </a> 
              </td>
 
-             <td> <a href="{% url 'backend:book_model_update' book_model.id %}">(Edit</a>
-                <a href="{% url 'backend:book_model_delete' book_model.id %}">Delete</a>)
-            </td>
+             <td> <a href="{% url 'backend:book_model_update' book_model.id %}">Edit</a>
+                <a href="{% url 'backend:book_model_delete' book_model.id %}">Delete</a>
+             </td>
              
              <td>
                 <span id="book_model_qty_{{book_model.id}}">{{book_model.get_quantity}}</span>pcs
+             </td>
+             <td>
                  <a href="#"  id="inc_{{book_model.id}}"
                     onclick="
                          inc('{% url 'backend:book_model_inc' book_model.id %}', {{book_model.id}});
@@ -37,8 +41,8 @@
                  >
                  <i class="fas fa-minus" id="minus_{{book_model.id}}" style="color: rgb(82, 197, 29)"></i>
                  </a>
-                </td>
-                 <td>
+            </td>
+            <td>
                  <input id="num_of_books_to_add{{book_model.id}}" name="num_of_books_to_add" type="number" placeholder="num_of_books_to_add"></input>
                  <button name="Add" onclick=" 
                     num_of_books_to_add=$('#num_of_books_to_add{{book_model.id}}').val()*1;
@@ -59,19 +63,23 @@
                        $('#num_of_books_to_rem{{book_model.id}}').val($('#num_of_books_to_rem{{book_model.id}}').placeholder);
                        return false;
                     ">Remove</button>
-               </td>
-                
-             </li>
+            </td>
+               
+             </li> </p>
             </tr>
             </div>
              
              {%endfor%}
-
+            </table>
         </ul>
         {% else %}
            <p class="row">There are no book_models in the library database.</p>
         {% endif %}
        
+        <p class="row"> <a href="{%url 'backend:book_list'%}">All books</a></p>
+
+
+
             <p class="row">
              <a href="{% url 'backend:book_model_create' %}">Add a new book model</a>
             </p>

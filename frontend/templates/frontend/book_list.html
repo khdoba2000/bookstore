@@ -1,0 +1,29 @@
+{%extends "base_bootsrap.html" %}
+{% block head %}
+ <script src="https://code.jquery.com/jquery-3.0.0.js"></script>
+ {% endblock %}      
+{% block content%}
+
+        {% if book_model_list %}
+        <table class="table"><th>Books</th>
+        <ul> 
+             {% for book_model in book_model_list%}
+             {% if book_model.get_quantity %}
+             <p class="row">
+           <tr>
+                 <td><li>{{book_model}} </td>
+                 <td><a href="{% url 'frontend:book_order' book_model.id %}">Book</a></td>  </li> 
+            </tr>
+          
+            </p>
+
+             {%endif%}
+             {%endfor%}
+           
+        </ul>
+       </table>
+        {%else%}
+        <h3> No books available at the moment </h3>
+        {%endif%}
+      
+ {%endblock%}

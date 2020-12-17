@@ -29,7 +29,13 @@ class Book_model(models.Model):
 
     def get_books(self):
         return Book.objects.filter(model=self)
-
+    
+    def has_book(self):
+        for book in self.get_books():
+            if book.is_taken==False:
+                return True
+        return False
+            
     def __str__(self):
         return '"'+self.title+'" by "'+self.author+'"'
     
@@ -42,11 +48,16 @@ class Book(models.Model):
         max_length=4,
         unique=True
     )
+    is_taken = models.BooleanField(default=False)
     model = models.ForeignKey(Book_model, on_delete=models.CASCADE, related_name="books")
 
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    
+    def set_taken(self):
+        self.is_taken=True
+
     def __str__(self):
         return '"'+self.model.title+'" with code "'+self.code+'"'
     

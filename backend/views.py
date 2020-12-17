@@ -8,7 +8,6 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 # Create your views here.
 
-
 class book_model_list(LoginRequiredMixin, ListView):
     model = Book_model
     fields="__all__"
@@ -19,29 +18,20 @@ class book_model_create(LoginRequiredMixin, CreateView):
     fields="__all__"
     success_url =  reverse_lazy('backend:book_model_list')
 
-
-    
-
 class book_model_detail(LoginRequiredMixin,DetailView):
     model = Book_model
     fields="__all__"
     success_url =  reverse_lazy('backend:book_model_list')
   
-
 class book_model_update(LoginRequiredMixin, UpdateView):
     model = Book_model
     fields="__all__"
     success_url =  reverse_lazy('backend:book_model_list')
 
-
 class book_model_delete(LoginRequiredMixin, DeleteView):
     model = Book_model
     fields="__all__"
     success_url =  reverse_lazy('backend:book_model_list')
-
-
-
-
 
 class book_list(LoginRequiredMixin, ListView):
     model = Book
@@ -53,23 +43,21 @@ class book_create(LoginRequiredMixin, CreateView):
     fields="__all__"
     success_url =  reverse_lazy('backend:book_list')
     
-
 class book_detail(LoginRequiredMixin,DetailView):
     model = Book
     fields="__all__"
     success_url =  reverse_lazy('backend:book_list')
-  
 
 class book_update(LoginRequiredMixin, UpdateView):
     model = Book
     fields="__all__"
     success_url =  reverse_lazy('backend:book_list')
 
-
 class book_delete(LoginRequiredMixin, DeleteView):
     model = Book
     fields="__all__"
     success_url =  reverse_lazy('backend:book_list')
+
 
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
@@ -77,8 +65,8 @@ from django.db.utils import IntegrityError
 import json
 from backend.models import Book
 
+#views to respond AJAX request
 @method_decorator(csrf_exempt, name='dispatch')
-
 class remove_book_set(View):
     def post(self, request):
         num_of_books_to_remove=request.POST.get('num', None)
@@ -115,7 +103,6 @@ class remove_book_set(View):
         return HttpResponse(resp, content_type="application/json")        
 
 @method_decorator(csrf_exempt, name='dispatch')
-
 class add_book_set(View):
     def post(self, request):
         num_of_books_to_add=request.POST.get('num', None)
@@ -169,8 +156,6 @@ class add_book_set(View):
             'quantity': book_model.get_quantity()
         })
         return HttpResponse(resp, content_type="application/json")        
-
-
 
 @method_decorator(csrf_exempt, name='dispatch')
 class inc(View):

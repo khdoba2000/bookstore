@@ -6,15 +6,27 @@ from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 # Create your views here.
 
-app_name = "frontend"
-class book_list(ListView):
+def book_list(request):
     model = Book
+    ctx={
+        'book_model_list': Book.objects.all()
+    }
     template_name = "frontend/book_list.html"
+    return render(request, template_name, ctx)
  
-class book_order(LoginRequiredMixin, View):
-    def get(self, request, pk):
+def book_order(request, pk):
+        print("hello GUY ")
+        #pk=request.GET['pk']
         print(f"Book{pk} ordered")
-        return HttpResponse("ORDERED")
-    
-
-
+        book_model=Book.objects.get(pk=pk)
+        if book_model.get_quantity():
+            code=book_model.books.last().code
+            #book_model.books.last().taken=True
+            
+        ctx={
+            'pk': pk,
+            'book': book_model,
+            'code': code
+        }
+        template_name="frontend/order_success.html"
+        return render(request, template_name, ctx)

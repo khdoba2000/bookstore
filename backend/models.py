@@ -1,8 +1,47 @@
 from django.db import models
 
-from django.core.validators import MinLengthValidator, RegexValidator
+from django.core.validators import EmailValidator, MinLengthValidator, RegexValidator
 import this
 # Create your models here.
+
+
+class User(models.Model):
+    login = models.CharField(max_length=32,
+                        validators=[
+                            MinLengthValidator(2)
+                        ],
+                        unique=True)
+    passsword = models.CharField(max_length=32,
+                        validators=[
+                            MinLengthValidator(2)
+                        ],
+                        unique=True)
+    name = models.CharField(max_length=32,
+                        validators=[
+                            MinLengthValidator(2)
+                        ])
+    surname = models.CharField(max_length=32,
+                        validators=[
+                            MinLengthValidator(2)
+                        ])
+    email = models.EmailField(validators=[
+                            EmailValidator
+                        ])
+    phone_number = models.CharField(validators=[
+                        RegexValidator(regex='^.{9}$', message='Length has to be 9')
+                        ],
+                        max_length=9)
+    def get_books(self):
+        return Book.objects.filter(model=self)
+    def __str__(self):
+        return '"'+self.name+'" with email "'+self.email+'"'
+    
+
+    
+
+
+
+
 
 genre_options=(
     ('science', "science"),
@@ -49,6 +88,7 @@ class Book(models.Model):
         unique=True
     )
     is_taken = models.BooleanField(default=False)
+    taken_by = models.ForeignKey(User, on_delete=models.DO_NOTHING, null=True, blank=True, related_name="books")
     model = models.ForeignKey(Book_model, on_delete=models.CASCADE, related_name="books")
 
 

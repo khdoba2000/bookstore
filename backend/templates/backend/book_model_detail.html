@@ -9,7 +9,7 @@
                 <br>Genre: {{book_model.genre}}
                 <br>Created at: {{book_model.created_at|naturaltime}}
                 <br>Updated at: {{book_model.updated_at|naturaltime}}
-                <br>Books: {%if  book_model.get_books%}<!-- If book exists -->
+                <br>Books: {%if  book_model.books%}<!-- If book exists -->
                               {% for book in book_model.get_books %}
                               <ul>
                                  <li>{{book}}</li>

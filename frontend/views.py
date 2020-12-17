@@ -6,6 +6,7 @@ from django.views import View
 from django.contrib.auth.mixins import LoginRequiredMixin
 # Create your views here.
 app_name="frontend"
+
 def book_list(request):
     model = Book
     ctx={
@@ -19,7 +20,7 @@ def book_order(request, pk):
         book_model=Book.objects.get(pk=pk)
         if book_model.get_quantity():
             code=book_model.books.last().code
-            book_model.delete()
+            book_model.books.last().delete()
             
         ctx={
             'pk': pk,

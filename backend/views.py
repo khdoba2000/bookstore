@@ -8,6 +8,34 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 # Create your views here.
 
+class release(View):
+    def get(self, request):
+        template_name="backend/release.html"
+        return render(request, template_name)
+
+    def post(self, request):
+        code=request.POST.get('code')
+        book=Book.objects.get(code=code)
+        if book.is_taken:
+            reader=book.taken_by
+            book.taken_by=None
+            book.release()
+            book.save()
+            ctx = {
+                "book": book,
+                "reader": reader
+            }
+            return render(request, "backend/success_release.html", ctx)
+        return HttpResponse("Book is not taken by anyone!")
+        
+        
+
+
+
+
+
+
+
 class book_model_list(LoginRequiredMixin, ListView):
     model = Book_model
     fields="__all__"
@@ -48,15 +76,20 @@ class book_detail(LoginRequiredMixin,DetailView):
     fields="__all__"
     success_url =  reverse_lazy('backend:book_list')
 
-class book_update(LoginRequiredMixin, UpdateView):
-    model = Book
-    fields="__all__"
-    success_url =  reverse_lazy('backend:book_list')
-
 class book_delete(LoginRequiredMixin, DeleteView):
     model = Book
     fields="__all__"
     success_url =  reverse_lazy('backend:book_list')
+
+
+
+
+
+
+
+
+
+
 
 
 from django.views.decorators.csrf import csrf_exempt

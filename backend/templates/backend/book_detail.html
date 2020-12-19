@@ -8,13 +8,14 @@
                 <br>Quantity of the same type: {{book.model.get_quantity}}pcs
                 <br>Genre: {{book.model.genre}}
                 <br>IS_taken: {{book.is_taken}}
+                {%if book.is_taken%}
+                  <br>Taken by: {{book.taken_by}}
+                  <br>Taken at: {{book.taken_at|naturaltime}}
+               {%endif%}
+     
                 <br>Created at: {{book.created_at|naturaltime}}
                 <br>Updated at: {{book.updated_at|naturaltime}}
-                <p class="row">
-                <a href="{% url 'backend:book_update' book.id %}">(Edit</a>
-                <a href="{% url 'backend:book_delete' book.id %}">Delete</a>)
-                </p>
-               </p>
+          
                 </div>
        </div>
        <p class="row">

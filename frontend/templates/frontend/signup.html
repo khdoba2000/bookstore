@@ -1,0 +1,16 @@
+{%extends "base_bootsrap.html" %}
+{% load crispy_forms_tags %}
+
+{%block content%}
+
+<div class="container">
+    <form action="" method ="post">
+            {%csrf_token%}
+            {{form|crispy}}
+            <input type="submit" value="Save">
+            <input type="submit" value="Cancel" onclick="window.location.href='{% url 'frontend:book_list' %}';return false;">         
+    </form>
+</div>
+
+
+{%endblock%}

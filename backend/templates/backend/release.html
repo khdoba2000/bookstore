@@ -1,0 +1,16 @@
+{%extends "base_bootsrap.html"%}
+{% load crispy_forms_tags %}
+{%block content%}
+
+<div class="row">
+<form action="{% url 'backend:release'%}" method ="post">
+    {%csrf_token%}
+    {{form|crispy}}
+    <input type="text" placeholder="code of book to release" name="code">
+    <input type="submit" value="release">
+    <input type="submit" value="Cancel" onclick="window.location.href='{% url 'backend:release' %}';return false;">         
+</form>
+</div>
+
+
+{%endblock%}

@@ -1,0 +1,26 @@
+{%extends "base_bootsrap.html" %}
+{% load crispy_forms_tags %}
+{% block head %}
+ <script src="https://code.jquery.com/jquery-3.0.0.js"></script>
+ {% endblock %}      
+{% block content%}
+{%if message%}
+<div class="row" >
+    {{message}}
+</div>
+{%endif%}
+<div class="row">
+    Not signed up? <a href="{%url 'frontend:signup' %}">Sign up</a>
+    <form action="{% url 'frontend:login' book_id%}" method ="post">
+                {%csrf_token%}
+                {{form|crispy}}
+                <input type="text" placeholder="Username" name="username">
+                <input type="password" placeholder="Password" name="password">
+                <input type="submit" value="Login">
+                <input type="submit" value="Cancel" onclick="window.location.href='{% url 'frontend:book_list' %}';return false;">         
+    </form>
+    
+</div>
+
+
+{% endblock %}

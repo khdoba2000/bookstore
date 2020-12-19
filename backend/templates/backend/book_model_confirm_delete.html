@@ -15,6 +15,6 @@
     <form action="" method="POST">
     {% csrf_token %}
     <input type="submit" value="Yes, delete.">
-    <button><a href="{%url 'backend:book_model_list'%}">Cancel</a></button>
-    </form>
+    <input type="submit" value="Cancel" onclick="window.location.href='{% url 'backend:book_model_list' %}';return false;">         
+</form>
     {% endblock %}

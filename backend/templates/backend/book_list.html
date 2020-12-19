@@ -11,11 +11,7 @@
         <ul>
              {% for book in book_list %}
              <div class="row">
-             <li><a href="{% url 'backend:book_detail' book.id %}">{{book}} </a> 
-                
-    
-                 <a href="{% url 'backend:book_update' book.id %}">(Edit</a>
-                 <a href="{% url 'backend:book_delete' book.id %}">Delete</a>)
+             <li><a href="{% url 'backend:book_detail' book.id %}">{{book}} </a>     
              </li>
             </div>
              {%endfor%}
@@ -24,7 +20,6 @@
         {% else %}
            <p class="row">There are no books in the library database.</p>
         {% endif %}
-       
             <p class="row">
              <a href="{% url 'backend:book_create' %}">Add a new book</a>
             </p>

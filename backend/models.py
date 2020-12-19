@@ -60,6 +60,10 @@ class Book_model(models.Model):
     def get_quantity(self):
         quantity = len(Book.objects.filter(model=self))
         return quantity
+    def get_available_quantity(self):
+        books=Book.objects.filter(model=self)
+        available_quantity = len(books.filter(is_taken=False))
+        return available_quantity
 
     def get_books(self):
         return Book.objects.filter(model=self)

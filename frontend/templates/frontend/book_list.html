@@ -13,6 +13,7 @@
            <tr>
                  <td><li>{{book_model}} </td>
                  <td><a href="{% url 'frontend:login' book_model.id%}">Order</a></td>  </li> 
+                 <td>{{book_model.get_available_quantity}} left</td>
             </tr>
           
             </p>

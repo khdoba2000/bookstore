@@ -4,7 +4,6 @@ from django.core.validators import EmailValidator, MinLengthValidator, RegexVali
 import this
 # Create your models here.
 
-
 class User(models.Model):
     username = models.CharField(max_length=32,
                         validators=[
@@ -36,7 +35,7 @@ class User(models.Model):
         return Book.objects.filter(taken_by=self)
 
     def __str__(self):
-        return '"'+self.name+'" with email "'+self.email+'"'
+        return '"'+self.name+'" with email "'+self.email+'" with phone number "+998'+ self.phone_number+'"'
 
 genre_options=(
     ('science', "science"),

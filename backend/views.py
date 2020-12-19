@@ -8,7 +8,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 # Create your views here.
 
-class release(View):
+class release(LoginRequiredMixin, View):
     def get(self, request):
         template_name="backend/release.html"
         return render(request, template_name)
@@ -40,6 +40,7 @@ class book_model_list(LoginRequiredMixin, ListView):
     model = Book_model
     fields="__all__"
     success_url =  reverse_lazy('backend:book_model_list')
+
 
 class book_model_create(LoginRequiredMixin, CreateView):
     model = Book_model
@@ -116,18 +117,26 @@ class remove_book_set(View):
                 })
             return HttpResponse(resp, content_type="application/json")
 
-        for i in range(int(num_of_books_to_remove)):
-            last_book_in_model=Book.objects.filter(model=book_model).last()
-            if last_book_in_model:
-                last_book_in_model.delete()
+    
+        books_of_the_model=Book.objects.filter(model=book_model)
+        num_av_books_in_library=len(books_of_the_model.filter(is_taken=False))
+        if num_av_books_in_library < int(num_of_books_to_remove):
+            resp = json.dumps({
+                    'message': f"No such number of available book for the model left in the library \n Only {num_av_books_in_library} available\n Others are given to readers",
+                    'error': True
+                })
+            return HttpResponse(resp, content_type="application/json")
+            
+        for available_book_in_model in books_of_the_model.filter(is_taken=False):
+            if available_book_in_model:
+                available_book_in_model.delete()
 
-            else: #if no book in database
+            else: #if no available_book in database
                 resp = json.dumps({
-                    'message': "No any book_models left in the store",
+                    'message': "No any available book for the model left in the store",
                     'error': True
                 })
                 return HttpResponse(resp, content_type="application/json")
-           
             
         book_model.save()
         resp = json.dumps({

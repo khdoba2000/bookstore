@@ -18,11 +18,11 @@ from django.contrib import admin
 from django import views
 
 urlpatterns = [
+    url("", include('frontend.urls')),
+    url("staff/", include('backend.urls')),
     url(r'^admin/', admin.site.urls),
-    url("backend/", include('backend.urls')),
-    url("frontend/", include('frontend.urls')),
     url('accounts/', include('django.contrib.auth.urls')),  # Keep
-    url("", include('home.urls')),
+  
 
 
 

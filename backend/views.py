@@ -30,12 +30,6 @@ class release(LoginRequiredMixin, View):
         
         
 
-
-
-
-
-
-
 class book_model_list(LoginRequiredMixin, ListView):
     model = Book_model
     fields="__all__"
